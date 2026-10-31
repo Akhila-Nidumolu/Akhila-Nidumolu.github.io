@@ -1,0 +1,431 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Portfolio of Akhila Nidumolu, a Java and Spring Boot software engineer: experience, projects, skills and contact.">
+<meta property="og:title" content="Akhila Nidumolu">
+<meta property="og:description" content="Java and Spring Boot software engineer. Experience, projects, skills and contact.">
+<meta property="og:type" content="website">
+<title>Akhila Nidumolu</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: left-aligned editorial grid. Each section is a mono label column beside its content, stacking on phones.
+   Motif: the hero answers like an API response, since the page's subject builds APIs. */
+:root {
+  --bg: #F2F4F8;
+  --surface: #FFFFFF;
+  --fg: #10151C;
+  --muted: #566170;
+  --line: #D5DAE3;
+  --accent: #2B4EE6;
+  --accent-soft: #E3E9FF;
+  --ok: #1B7F47;
+  --font-display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --font-body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0E1218; --surface: #151B24; --fg: #E8ECF2; --muted: #93A0B3;
+    --line: #263040; --accent: #8FA8FF; --accent-soft: #1B2650; --ok: #52C28A;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0E1218; --surface: #151B24; --fg: #E8ECF2; --muted: #93A0B3;
+  --line: #263040; --accent: #8FA8FF; --accent-soft: #1B2650; --ok: #52C28A;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  padding-block: 24px 56px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.wrap { max-width: 1040px; margin: 0 auto; }
+a { color: var(--accent); text-underline-offset: 3px; }
+a:hover { text-decoration-thickness: 2px; }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+h1, h2, h3 { font-family: var(--font-display); margin: 0; text-wrap: balance; line-height: 1.12; letter-spacing: -0.01em; }
+p { margin: 0; }
+ul { margin: 0; padding: 0; list-style: none; }
+
+/* top bar */
+.bar { display: flex; flex-wrap: wrap; gap: 8px 24px; justify-content: space-between; align-items: baseline; padding-bottom: 16px; border-bottom: 2px solid var(--fg); }
+.bar .mark { font-family: var(--font-mono); font-size: 13px; font-weight: 500; }
+.bar nav { display: flex; flex-wrap: wrap; gap: 4px 20px; font-family: var(--font-mono); font-size: 13px; }
+.bar nav a { color: var(--muted); text-decoration: none; }
+.bar nav a:hover { color: var(--accent); }
+
+/* hero */
+.hero { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 40px; padding-block: 56px 64px; align-items: center; }
+.eyebrow { font-family: var(--font-mono); font-size: 13px; color: var(--muted); margin-bottom: 16px; }
+.hero h1 { font-size: clamp(42px, 7vw, 76px); font-weight: 700; margin-bottom: 20px; }
+.hero .lead { font-size: 19px; max-width: 34em; color: var(--fg); }
+.hero .lead b { font-weight: 600; }
+.cta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px; }
+.btn { display: inline-block; padding: 10px 18px; border: 1.5px solid var(--fg); border-radius: 6px; color: var(--fg); text-decoration: none; font-weight: 500; font-size: 15px; background: transparent; }
+.btn:hover { background: var(--fg); color: var(--bg); }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--bg); }
+.btn.primary:hover { background: var(--fg); border-color: var(--fg); color: var(--bg); }
+
+.resp { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; font-family: var(--font-mono); font-size: 13.5px; line-height: 1.7; overflow: hidden; min-width: 0; }
+.resp .req { display: flex; flex-wrap: wrap; gap: 4px 12px; justify-content: space-between; padding: 12px 18px; border-bottom: 1px solid var(--line); }
+.resp .req span:first-child { font-weight: 500; }
+.resp .status { color: var(--ok); font-weight: 500; }
+.resp pre { margin: 0; padding: 16px 18px 18px; overflow-x: auto; font: inherit; }
+.resp .k { color: var(--accent); }
+.resp .s { color: var(--fg); }
+.resp .c { color: var(--muted); }
+
+/* sections */
+section { display: grid; grid-template-columns: 180px minmax(0, 1fr); gap: 16px 40px; padding-block: 48px; border-top: 1px solid var(--line); }
+.label { font-family: var(--font-mono); font-size: 13px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); padding-top: 6px; }
+.content { min-width: 0; }
+.section-title { font-size: clamp(26px, 3.4vw, 34px); font-weight: 700; margin-bottom: 8px; }
+.sub { color: var(--muted); margin-bottom: 28px; max-width: 40em; }
+
+/* timeline */
+.timeline { border-left: 2px solid var(--line); margin-left: 4px; }
+.timeline li { position: relative; padding: 0 0 22px 24px; display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 4px 16px; }
+.timeline li:last-child { padding-bottom: 0; }
+.timeline li::before { content: ""; position: absolute; left: -7px; top: 9px; width: 12px; height: 12px; border-radius: 50%; background: var(--bg); border: 2px solid var(--accent); }
+.timeline .when { font-family: var(--font-mono); font-size: 13px; color: var(--accent); padding-top: 3px; font-weight: 500; }
+.timeline .what { min-width: 0; }
+.timeline li.now::before { background: var(--accent); }
+
+/* experience */
+.role { display: flex; flex-wrap: wrap; gap: 4px 16px; justify-content: space-between; align-items: baseline; margin-bottom: 4px; }
+.role h3 { font-size: 22px; }
+.role .dates { font-family: var(--font-mono); font-size: 13px; color: var(--muted); }
+.client { color: var(--muted); margin-bottom: 24px; }
+.stack { display: grid; gap: 16px; }
+.xp { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 22px 24px; min-width: 0; }
+.xp h4 { font-family: var(--font-display); font-size: 18px; margin: 0 0 4px; }
+.xp .tags { margin-bottom: 14px; }
+.bullets { display: grid; gap: 10px; }
+.bullets li { position: relative; padding-left: 18px; }
+.bullets li::before { content: ""; position: absolute; left: 0; top: 0.72em; width: 8px; height: 2px; background: var(--accent); }
+.intern { margin-top: 28px; padding-top: 24px; border-top: 1px dashed var(--line); }
+.intern h3 { font-size: 20px; margin-bottom: 2px; }
+.intern .dates { font-family: var(--font-mono); font-size: 13px; color: var(--muted); margin-bottom: 12px; }
+
+.tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.tag { font-family: var(--font-mono); font-size: 12px; padding: 2px 9px; border-radius: 4px; background: var(--accent-soft); color: var(--accent); font-weight: 500; }
+
+/* projects */
+.projects { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.proj { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 24px; display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.proj.wide { grid-column: 1 / -1; }
+.proj .meta { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 12px; font-family: var(--font-mono); font-size: 12.5px; color: var(--muted); }
+.proj h3 { font-size: 24px; }
+.proj.wide h3 { font-size: 30px; }
+.proj .tagline { font-size: 17px; }
+.proj .cols { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 32px; }
+.proj .cols h4 { font-family: var(--font-mono); font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin: 0 0 4px; font-weight: 500; }
+.proj .cols p { font-size: 15px; }
+.proj .more { margin-top: auto; font-size: 14.5px; font-weight: 500; }
+
+/* skills */
+.skills { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 32px; }
+.skills h3 { font-family: var(--font-mono); font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); font-weight: 500; margin-bottom: 8px; }
+.skills p { font-size: 15.5px; }
+
+/* recognition */
+.recog { display: grid; gap: 18px; }
+.recog li { display: grid; grid-template-columns: 70px minmax(0, 1fr); gap: 4px 16px; }
+.recog .yr { font-family: var(--font-mono); font-size: 13px; color: var(--accent); font-weight: 500; padding-top: 3px; }
+.recog b { font-weight: 600; }
+.edu { margin-top: 28px; padding-top: 24px; border-top: 1px dashed var(--line); }
+.edu b { font-weight: 600; }
+.edu .muted { color: var(--muted); }
+
+/* contact */
+.contact .big { font-family: var(--font-display); font-size: clamp(26px, 4vw, 40px); font-weight: 700; margin-bottom: 20px; max-width: 18em; }
+.mailrow { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 20px; }
+.mailrow code { font-family: var(--font-mono); font-size: 15px; padding: 8px 12px; background: var(--surface); border: 1px solid var(--line); border-radius: 6px; user-select: all; overflow-wrap: anywhere; }
+.mailrow button { font: inherit; font-size: 14px; padding: 8px 14px; border: 1.5px solid var(--fg); border-radius: 6px; background: transparent; color: var(--fg); cursor: pointer; font-weight: 500; }
+.mailrow button:hover { background: var(--fg); color: var(--bg); }
+.links { display: flex; flex-wrap: wrap; gap: 8px 24px; font-weight: 500; }
+
+footer { border-top: 2px solid var(--fg); padding-top: 16px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 16px; font-family: var(--font-mono); font-size: 12.5px; color: var(--muted); }
+
+@media (max-width: 860px) {
+  .hero { grid-template-columns: minmax(0, 1fr); gap: 32px; padding-block: 40px 48px; }
+  section { grid-template-columns: minmax(0, 1fr); gap: 8px; padding-block: 36px; }
+  .label { padding-top: 0; }
+}
+@media (max-width: 640px) {
+  .projects, .skills, .proj .cols { grid-template-columns: minmax(0, 1fr); }
+  .timeline li { grid-template-columns: minmax(0, 1fr); }
+  .recog li { grid-template-columns: minmax(0, 1fr); }
+  .xp, .proj { padding: 18px; }
+  .hero .lead { font-size: 17px; }
+}
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; transition: none !important; } }
+</style>
+<style>:root{color-scheme:light}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+
+
+<div class="wrap">
+
+  <header class="bar">
+    <span class="mark">akhila.nidumolu</span>
+    <nav aria-label="Sections">
+      <a href="#journey">Journey</a>
+      <a href="#experience">Experience</a>
+      <a href="#projects">Projects</a>
+      <a href="#skills">Skills</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
+
+  <div class="hero">
+    <div>
+      <p class="eyebrow">Software Engineer · Hyderabad, India</p>
+      <h1>Akhila Nidumolu</h1>
+      <p class="lead">I build, test, ship and support <b>Java and Spring Boot services</b>. Since June 2025 I have worked at Cognizant on a large bank's card-servicing platform, from REST APIs to AWS pipelines and production support.</p>
+      <div class="cta">
+        <a class="btn primary" href="Akhila_Nidumolu_Resume_Product.pdf" target="_blank" rel="noopener">View resume</a>
+        <a class="btn" href="https://github.com/Akhila-Nidumolu" target="_blank" rel="noopener">GitHub</a>
+        <a class="btn" href="https://www.linkedin.com/in/akhila-nidumolu/" target="_blank" rel="noopener">LinkedIn</a>
+      </div>
+    </div>
+
+    <div class="resp" role="img" aria-label="An API-style response summarising Akhila: Software Engineer in Hyderabad, working with Java, Spring Boot, React and AWS, has built 35 plus REST APIs, open to backend and full-stack roles.">
+      <div class="req"><span>GET /akhila-nidumolu</span><span class="status">200 OK</span></div>
+<pre><span class="c">{</span>
+  <span class="k">"role"</span>: <span class="s">"Software Engineer"</span>,
+  <span class="k">"based_in"</span>: <span class="s">"Hyderabad, India"</span>,
+  <span class="k">"stack"</span>: [<span class="s">"Java"</span>, <span class="s">"Spring Boot"</span>,
+            <span class="s">"React"</span>, <span class="s">"AWS"</span>],
+  <span class="k">"built"</span>: <span class="s">"35+ REST APIs"</span>,
+  <span class="k">"resolved"</span>: <span class="s">"10+ production issues"</span>,
+  <span class="k">"published"</span>: <span class="s">"IEEE paper"</span>,
+  <span class="k">"open_to"</span>: [<span class="s">"backend"</span>, <span class="s">"full-stack"</span>]
+<span class="c">}</span></pre>
+    </div>
+  </div>
+
+  <section id="journey">
+    <div class="label">Journey</div>
+    <div class="content">
+      <h2 class="section-title">From college projects to production</h2>
+      <p class="sub">Each project below came from a real problem. The work at Cognizant is where I learned to run software in production.</p>
+      <ul class="timeline">
+        <li><span class="when">2021</span><span class="what">Started a B.Tech (Honors) in Computer Science and Engineering at Prasad V Potluri Siddhartha Institute of Technology.</span></li>
+        <li><span class="when">2023</span><span class="what">Built a fake profile detector and a travel planner. Reached the finals of the Smart India Hackathon.</span></li>
+        <li><span class="when">2024</span><span class="what">Attended the ACM Summer School on Generative AI for Text at IIT Gandhinagar, where the Karpin Chat project began. Also built a pharmacy management app.</span></li>
+        <li><span class="when">2025 · final year</span><span class="what">Wrote and presented an IEEE paper on a secure attendance system, contributing the concept, the writing and the frontend.</span></li>
+        <li><span class="when">Jan to Apr 8, 2025</span><span class="what">Java Full Stack intern at Cognizant. Built an employee management system.</span></li>
+        <li><span class="when">May 15, 2025</span><span class="what">Graduated with a CGPA of 9.1.</span></li>
+        <li><span class="when">Jun 20, 2025</span><span class="what">Joined Cognizant full time as a Software Engineer.</span></li>
+        <li class="now"><span class="when">Aug 13, 2025</span><span class="what">After basic tech training, joined a banking client's card-servicing project, where I work today.</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="experience">
+    <div class="label">Experience</div>
+    <div class="content">
+      <div class="role">
+        <h2 class="section-title">Software Engineer, Cognizant</h2>
+        <span class="dates">Jun 2025 to present</span>
+      </div>
+      <p class="client">Client: a leading global bank's card-servicing platform. Two areas of work:</p>
+
+      <div class="stack">
+        <article class="xp">
+          <h4>Payment plan APIs and customer experience</h4>
+          <div class="tags"><span class="tag">Java</span><span class="tag">Spring Boot</span><span class="tag">REST APIs</span><span class="tag">React</span><span class="tag">TypeScript</span><span class="tag">Pact</span></div>
+          <ul class="bullets">
+            <li>Developed and integrated 35+ Java/Spring Boot REST APIs for payment plans, offers, enrollment and account servicing, across controller, service and data-access layers with databases and downstream services.</li>
+            <li>Configured and validated API gateway routes (authentication, rate and policy rules, request transformation) for end-to-end connectivity from the gateway to the payment-plan services.</li>
+            <li>Modernized a collections re-enrollment workflow by replacing legacy C++/EJB calls with Java REST services (an agency lookup read API and a re-enrollment write API) used by a React/TypeScript UI.</li>
+            <li>Wrote unit, component and contract tests with JUnit, Mockito, Cucumber, Pact and WireMock covering valid, invalid and edge cases, including the retry-selection logic of an asynchronous store-and-forward enrollment service.</li>
+            <li>Built React features for customer payment journeys and fixed an accessibility defect on a customer-facing offers page.</li>
+          </ul>
+        </article>
+
+        <article class="xp">
+          <h4>Data processing and cloud platform engineering</h4>
+          <div class="tags"><span class="tag">Spring Batch</span><span class="tag">AWS</span><span class="tag">Terraform</span><span class="tag">ECS</span><span class="tag">SQS</span><span class="tag">Glue</span><span class="tag">Lambda</span></div>
+          <ul class="bullets">
+            <li>Built Spring Batch jobs that run daily, configured per environment (DEV, UAT, PROD, QA, PERF, CERT) through deployment scripts.</li>
+            <li>Worked on an event-driven AWS data pipeline (S3 notification, Lambda, Glue, a Spring Batch pre-processor on Aurora PostgreSQL, SQS partitions) and acceptance-tested the Lambda trigger with valid, edge and malformed events.</li>
+            <li>Migrated a customer-data processor to a NextGen ECS platform using separate DEV and UAT Terraform workspaces, with plan review, health checks and IAM and secret validation, keeping the legacy deployment until cutover.</li>
+            <li>Supported application onboarding and deployment across DEV, CERT, QA, UAT, PERF and Production, including environment configuration, health validation and rollback readiness.</li>
+            <li>Investigated and resolved 10+ production and environment issues involving SQS, ECS and infrastructure changes, using CloudWatch, Splunk, Dynatrace and Argus for root-cause analysis.</li>
+            <li>Delivered security and platform upgrades, including a sidecar CVE fix, framework and infrastructure upgrades, ARM64/Graviton validation and a Splunk server migration to AWS.</li>
+          </ul>
+        </article>
+      </div>
+
+      <div class="intern">
+        <h3>Java Full Stack Development Intern, Cognizant</h3>
+        <p class="dates">Jan to Apr 8, 2025</p>
+        <ul class="bullets">
+          <li>Built Spring Boot REST APIs with Hibernate/JPA and MySQL, plus React components integrated with them.</li>
+          <li>Worked on authentication, database operations, API integration, debugging and application validation. The employee management system below came out of this internship.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="projects">
+    <div class="label">Projects</div>
+    <div class="content">
+      <h2 class="section-title">Things I built myself</h2>
+      <p class="sub">Six projects across college and my first year of work. The first two were the ones I learned the most from.</p>
+
+      <div class="projects">
+
+        <article class="proj wide">
+          <div class="meta"><span>2024 · rebuilt after graduation</span><span>Hackathon origin</span></div>
+          <h3>Karpin Chat</h3>
+          <p class="tagline">A chatbot that reads a large CSV file and answers questions about it in plain English.</p>
+          <div class="cols">
+            <div><h4>How it works</h4><p>You enter the path to a CSV file, the app loads and analyzes it, and you ask questions. A simple question gets a direct answer. A larger result comes back as a CSV file.</p></div>
+            <div><h4>Under the hood</h4><p>An LLM (Llama 3 through Groq) turns each question into SQL. The backend validates the query and runs it read-only, so generated SQL cannot change the data. Built for large datasets, with CSVs of millions of rows as the target.</p></div>
+            <div><h4>Where it came from</h4><p>It began as a hackathon project in the 20-day ACM Summer School on Generative AI for Text at IIT Gandhinagar (2024), when I knew little about LLMs. After graduating I rebuilt it properly with AI assistance.</p></div>
+            <div><h4>Stack</h4><div class="tags"><span class="tag">Java</span><span class="tag">Spring Boot</span><span class="tag">Spring JDBC</span><span class="tag">H2</span><span class="tag">React</span><span class="tag">Llama 3</span><span class="tag">Groq</span></div></div>
+          </div>
+        </article>
+
+        <article class="proj wide">
+          <div class="meta"><span>2023</span><span>First project with real-world exposure</span></div>
+          <h3>Fake Social Media Profile Detection</h3>
+          <p class="tagline">Type in an Instagram ID and get a verdict on whether the account is genuine or fake, with a percentage.</p>
+          <div class="cols">
+            <div><h4>How it works</h4><p>The app collects public profile details: followers, following, bio, external URL, activity, join date and profile picture. The data goes through three trained models, KNN, SVM and Random Forest, which each return a decision and how likely the account is to be original or fake.</p></div>
+            <div><h4>Training</h4><p>I trained the models on a Kaggle dataset of about 2 million accounts, reformatted to my chosen features. The metrics are in the Google Colab notebook.</p></div>
+            <div><h4>Choices I made</h4><p>I researched both Twitter and Instagram. Twitter would have needed NLP skills I did not have yet, so I went with Instagram. The first version used Python, Flask and minimal CSS, and I later rebuilt it as a full-stack app with Java, React, REST APIs and a database.</p></div>
+            <div><h4>Stack</h4><div class="tags"><span class="tag">Python</span><span class="tag">Flask</span><span class="tag">KNN</span><span class="tag">SVM</span><span class="tag">Random Forest</span><span class="tag">Java</span><span class="tag">React</span></div></div>
+          </div>
+        </article>
+
+        <article class="proj">
+          <div class="meta"><span>2025 · final-year project</span><span>IEEE paper</span></div>
+          <h3>Secure Attendance System</h3>
+          <p>An attendance system that combines machine learning and blockchain. I came up with the concept, wrote the paper and built the frontend, while teammates built the backend. I authored and presented it as an IEEE conference paper.</p>
+          <div class="tags"><span class="tag">Machine learning</span><span class="tag">Blockchain</span></div>
+          <a class="more" href="https://www.researchgate.net/publication/391038538_Secure_Attendance_System_Leveraging_Machine_Learning_and_Blockchain" target="_blank" rel="noopener">Read the paper</a>
+        </article>
+
+        <article class="proj">
+          <div class="meta"><span>2025 · internship project</span><span>Cognizant</span></div>
+          <h3>Employee Management System</h3>
+          <p>A web app used by both managers and employees, with the login separating the two. Employees clock in, see their holidays and shift timings, and apply for leave. A rejected request can be followed up with a direct email to the manager. Clocking in more than an hour after the shift starts marks the employee absent. Managers clock in, review leave requests and set shift schedules. Each profile shows designation, leaves, performance and clock-in history.</p>
+          <div class="tags"><span class="tag">Java</span><span class="tag">Spring Boot</span><span class="tag">React</span><span class="tag">MySQL</span></div>
+        </article>
+
+        <article class="proj">
+          <div class="meta"><span>2024</span><span>Web app</span></div>
+          <h3>Pharmacy Management App</h3>
+          <p>An app for pharmacy staff. After login, the home page is a set of blocks: upcoming medicines, medicines in stock, medicines that are used up and ready to reorder, and the most and least sold medicines. Doctor consultations booked through the pharmacy open into three views: upcoming, ongoing and completed.</p>
+        </article>
+
+        <article class="proj">
+          <div class="meta"><span>2023</span><span>Web app</span></div>
+          <h3>Travel Management App</h3>
+          <p>A trip-planning web app in the spirit of travel booking sites. One page lists the most famous places to visit, another the best hotels, another the food worth trying, and a further page handles ticket booking and consultation.</p>
+        </article>
+
+      </div>
+      <p style="margin-top:20px"><a href="https://github.com/Akhila-Nidumolu" target="_blank" rel="noopener">More on GitHub</a></p>
+    </div>
+  </section>
+
+  <section id="skills">
+    <div class="label">Skills</div>
+    <div class="content">
+      <h2 class="section-title">What I work with</h2>
+      <p class="sub">Daily tools at work, plus what I used on my own projects.</p>
+      <div class="skills">
+        <div><h3>Languages</h3><p>Java, Python, JavaScript, SQL, C++</p></div>
+        <div><h3>Backend</h3><p>Spring Boot, Spring MVC, Spring Batch, REST APIs, OpenAPI, JPA, Hibernate, JDBC, Microservices, Flask</p></div>
+        <div><h3>Frontend</h3><p>React.js, HTML5, CSS3</p></div>
+        <div><h3>Databases</h3><p>MySQL, Aurora PostgreSQL</p></div>
+        <div><h3>AWS and DevOps</h3><p>ECS, S3, Lambda, Glue, SQS, SSM, CloudWatch, Terraform, Jenkins, Spinnaker, CI/CD, blue-green deployments</p></div>
+        <div><h3>Testing</h3><p>JUnit, Mockito, Cucumber, Pact, WireMock, Swagger, Bruno</p></div>
+        <div><h3>Monitoring</h3><p>Splunk, Dynatrace, Argus, CloudWatch</p></div>
+        <div><h3>Machine learning</h3><p>KNN, SVM, Random Forest, working with LLMs through Groq</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="recognition">
+    <div class="label">Recognition</div>
+    <div class="content">
+      <h2 class="section-title">Achievements and education</h2>
+      <ul class="recog" style="margin-top:24px">
+        <li><span class="yr">2025</span><span><b>IEEE conference paper.</b> Authored and presented <a href="https://www.researchgate.net/publication/391038538_Secure_Attendance_System_Leveraging_Machine_Learning_and_Blockchain" target="_blank" rel="noopener">Secure Attendance System Leveraging Machine Learning and Blockchain</a>.</span></li>
+        <li><span class="yr">2024</span><span><b>ACM Summer School.</b> Selected participant in Generative AI for Text, IIT Gandhinagar.</span></li>
+        <li><span class="yr">2023</span><span><b>Smart India Hackathon finalist.</b></span></li>
+      </ul>
+      <div class="edu">
+        <p><b>B.Tech (Honors), Computer Science and Engineering</b></p>
+        <p class="muted">Prasad V Potluri Siddhartha Institute of Technology · 2021 to 2025 · CGPA 9.1 out of 10</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact" class="contact">
+    <div class="label">Contact</div>
+    <div class="content">
+      <p class="big">Open to backend and full-stack roles.</p>
+      <div class="mailrow">
+        <code id="mail">nidumoluakhila@gmail.com</code>
+        <button type="button" id="copy">Copy email</button>
+      </div>
+      <div class="links">
+        <a href="https://www.linkedin.com/in/akhila-nidumolu/" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="https://github.com/Akhila-Nidumolu" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://leetcode.com/u/AkhilaNidumolu/" target="_blank" rel="noopener">LeetCode</a>
+        <a href="Akhila_Nidumolu_Resume_Product.pdf" target="_blank" rel="noopener">Resume (PDF)</a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <span>Akhila Nidumolu</span>
+    <span>Hyderabad, India</span>
+  </footer>
+</div>
+
+<script>
+(function () {
+  var btn = document.getElementById("copy");
+  var mail = document.getElementById("mail");
+  if (!btn || !mail) return;
+  function select() {
+    try {
+      var r = document.createRange();
+      r.selectNodeContents(mail);
+      var s = window.getSelection();
+      s.removeAllRanges();
+      s.addRange(r);
+    } catch (e) {}
+  }
+  btn.addEventListener("click", function () {
+    var text = mail.textContent;
+    var done = function () { btn.textContent = "Copied"; setTimeout(function () { btn.textContent = "Copy email"; }, 1800); };
+    try {
+      navigator.clipboard.writeText(text).then(done, function () { select(); btn.textContent = "Press Ctrl+C"; });
+    } catch (e) { select(); btn.textContent = "Press Ctrl+C"; }
+  });
+})();
+</script>
+
+</body>
+</html>
