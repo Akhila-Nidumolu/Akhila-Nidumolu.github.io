@@ -134,6 +134,11 @@ section { display: grid; grid-template-columns: 180px minmax(0, 1fr); gap: 16px 
 .proj .cols p { font-size: 15px; }
 .proj .more { margin-top: auto; font-size: 14.5px; font-weight: 500; }
 
+.shot { margin: 8px 0 0; min-width: 0; }
+.shot img { display: block; width: 100%; height: auto; border: 1px solid var(--line); border-radius: 8px; }
+.shot figcaption { font-size: 13.5px; color: var(--muted); margin-top: 8px; max-width: 46em; }
+.shot figcaption b { color: var(--fg); font-weight: 600; }
+
 /* skills */
 .skills { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 32px; }
 .skills h3 { font-family: var(--font-mono); font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); font-weight: 500; margin-bottom: 8px; }
@@ -312,6 +317,10 @@ footer { border-top: 2px solid var(--fg); padding-top: 16px; display: flex; flex
             <div><h4>Choices I made</h4><p>I researched both Twitter and Instagram. Twitter would have needed NLP skills I did not have yet, so I went with Instagram. The first version used Python, Flask and minimal CSS, and I later rebuilt it as a full-stack app with Java, React, REST APIs and a database.</p></div>
             <div><h4>Stack</h4><div class="tags"><span class="tag">Python</span><span class="tag">Flask</span><span class="tag">KNN</span><span class="tag">SVM</span><span class="tag">Random Forest</span><span class="tag">Java</span><span class="tag">React</span></div></div>
           </div>
+          <figure class="shot">
+            <img src="fake-profile-concept.jpg" width="1104" height="664" loading="lazy" alt="Concept mockup of a fake profile detection dashboard: an Instagram username box, a verdict card with a confidence percentage, profile details, and a bar chart comparing KNN, SVM and Random Forest.">
+            <figcaption><b>Concept mockup.</b> This shows the idea of the interface and is not a screenshot of the app. The profile, scores and history are example values, not results from my models.</figcaption>
+          </figure>
         </article>
 
         <article class="proj">
