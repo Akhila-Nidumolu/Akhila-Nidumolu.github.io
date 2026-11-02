@@ -9,173 +9,241 @@
 <meta property="og:type" content="website">
 <title>Akhila Nidumolu</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap">
 <style>
-/* Layout: left-aligned editorial grid. Each section is a mono label column beside its content, stacking on phones.
-   Motif: the hero answers like an API response, since the page's subject builds APIs. */
+/* Layout: the whole page is an API you can browse. Sections are endpoints (GET /journey), the hero is a live
+   API explorer, work cards are terminal-style windows, and a pulse travels the request path a bank request takes.
+   Palette: cool paper + ink navy, signal orange as the single loud accent. The console stays dark in both themes. */
 :root {
-  --bg: #F2F4F8;
+  --bg: #EDF0F5;
   --surface: #FFFFFF;
-  --fg: #10151C;
-  --muted: #566170;
-  --line: #D5DAE3;
-  --accent: #2B4EE6;
-  --accent-soft: #E3E9FF;
+  --fg: #0B1220;
+  --muted: #566074;
+  --line: #D3D9E4;
+  --dot: #C9D0DE;
+  --accent: #FF5B1F;
+  --accent-ink: #B93A0A;
+  --accent-soft: #FFE6DA;
+  --key: #2B4EE6;
   --ok: #1B7F47;
+  --term-bg: #0B1220;
+  --term-fg: #E6EBF5;
+  --term-muted: #7C879C;
+  --term-key: #8FA8FF;
+  --term-str: #8FE3B0;
+  --term-num: #FFB48F;
+  --term-line: #1D2740;
   --font-display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
   --font-body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
-  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0E1218; --surface: #151B24; --fg: #E8ECF2; --muted: #93A0B3;
-    --line: #263040; --accent: #8FA8FF; --accent-soft: #1B2650; --ok: #52C28A;
+    --bg: #080C14; --surface: #101827; --fg: #E8ECF4; --muted: #93A0B6; --line: #222D44; --dot: #1B2438;
+    --accent: #FF7A45; --accent-ink: #FF9A70; --accent-soft: #3A1E12; --key: #8FA8FF; --ok: #52C28A;
+    --term-bg: #050810; --term-line: #18223A;
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #0E1218; --surface: #151B24; --fg: #E8ECF2; --muted: #93A0B3;
-  --line: #263040; --accent: #8FA8FF; --accent-soft: #1B2650; --ok: #52C28A;
+  --bg: #080C14; --surface: #101827; --fg: #E8ECF4; --muted: #93A0B6; --line: #222D44; --dot: #1B2438;
+  --accent: #FF7A45; --accent-ink: #FF9A70; --accent-soft: #3A1E12; --key: #8FA8FF; --ok: #52C28A;
+  --term-bg: #050810; --term-line: #18223A;
   color-scheme: dark;
 }
 
 * { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
 body {
   background: var(--bg);
   color: var(--fg);
   font-family: var(--font-body);
   font-size: 16px;
   line-height: 1.6;
-  padding-block: 24px 56px;
+  padding-block: 20px 56px;
   padding-left: max(16px, env(safe-area-inset-left, 0px));
   padding-right: max(16px, env(safe-area-inset-right, 0px));
 }
-.wrap { max-width: 1040px; margin: 0 auto; }
-a { color: var(--accent); text-underline-offset: 3px; }
+.wrap { max-width: 1080px; margin: 0 auto; }
+a { color: var(--accent-ink); text-underline-offset: 3px; }
 a:hover { text-decoration-thickness: 2px; }
 a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
-h1, h2, h3 { font-family: var(--font-display); margin: 0; text-wrap: balance; line-height: 1.12; letter-spacing: -0.01em; }
+h1, h2, h3, h4 { font-family: var(--font-display); margin: 0; text-wrap: balance; line-height: 1.1; letter-spacing: -0.015em; }
 p { margin: 0; }
 ul { margin: 0; padding: 0; list-style: none; }
 
 /* top bar */
-.bar { display: flex; flex-wrap: wrap; gap: 8px 24px; justify-content: space-between; align-items: baseline; padding-bottom: 16px; border-bottom: 2px solid var(--fg); }
-.bar .mark { font-family: var(--font-mono); font-size: 13px; font-weight: 500; }
-.bar nav { display: flex; flex-wrap: wrap; gap: 4px 20px; font-family: var(--font-mono); font-size: 13px; }
+.bar { display: flex; flex-wrap: wrap; gap: 6px 24px; justify-content: space-between; align-items: baseline; padding-bottom: 14px; border-bottom: 2px solid var(--fg); font-family: var(--font-mono); font-size: 13px; }
+.bar .mark { font-weight: 700; }
+.bar .mark i { font-style: normal; color: var(--accent-ink); }
+.bar nav { display: flex; flex-wrap: wrap; gap: 4px 18px; }
 .bar nav a { color: var(--muted); text-decoration: none; }
-.bar nav a:hover { color: var(--accent); }
+.bar nav a:hover { color: var(--accent-ink); }
 
 /* hero */
-.hero { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 40px; padding-block: 56px 64px; align-items: center; }
-.eyebrow { font-family: var(--font-mono); font-size: 13px; color: var(--muted); margin-bottom: 16px; }
-.hero h1 { font-size: clamp(42px, 7vw, 76px); font-weight: 700; margin-bottom: 20px; }
-.hero .lead { font-size: 19px; max-width: 34em; color: var(--fg); }
-.hero .lead b { font-weight: 600; }
+.hero {
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: 44px; align-items: center;
+  padding-block: 56px 60px;
+  background-image: radial-gradient(var(--dot) 1.2px, transparent 1.2px);
+  background-size: 22px 22px;
+  background-position: -8px -8px;
+}
+.eyebrow { font-family: var(--font-mono); font-size: 13px; color: var(--muted); margin-bottom: 18px; }
+.eyebrow b { color: var(--accent-ink); font-weight: 500; }
+.hero h1 { font-size: clamp(54px, 9vw, 108px); font-weight: 800; line-height: 0.92; letter-spacing: -0.035em; margin-bottom: 26px; }
+.hero h1 .cur { display: inline-block; width: 0.09em; height: 0.78em; background: var(--accent); margin-left: 0.07em; vertical-align: baseline; transform: translateY(0.02em); animation: blink 1.1s steps(1) infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+.lead { font-size: 19px; max-width: 31em; }
+.lead b { font-weight: 600; background: linear-gradient(transparent 62%, var(--accent-soft) 62%); }
 .cta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px; }
-.btn { display: inline-block; padding: 10px 18px; border: 1.5px solid var(--fg); border-radius: 6px; color: var(--fg); text-decoration: none; font-weight: 500; font-size: 15px; background: transparent; }
-.btn:hover { background: var(--fg); color: var(--bg); }
-.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--bg); }
-.btn.primary:hover { background: var(--fg); border-color: var(--fg); color: var(--bg); }
+.btn { display: inline-block; padding: 11px 18px; border: 2px solid var(--fg); border-radius: 6px; color: var(--fg); text-decoration: none; font-weight: 600; font-size: 15px; background: var(--surface); box-shadow: 3px 3px 0 var(--fg); transition: transform .12s, box-shadow .12s; }
+.btn:hover { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--fg); }
+.btn.primary { background: var(--accent); border-color: var(--fg); color: #0B1220; }
 
-.resp { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; font-family: var(--font-mono); font-size: 13.5px; line-height: 1.7; overflow: hidden; min-width: 0; }
-.resp .req { display: flex; flex-wrap: wrap; gap: 4px 12px; justify-content: space-between; padding: 12px 18px; border-bottom: 1px solid var(--line); }
-.resp .req span:first-child { font-weight: 500; }
-.resp .status { color: var(--ok); font-weight: 500; }
-.resp pre { margin: 0; padding: 16px 18px 18px; overflow-x: auto; font: inherit; }
-.resp .k { color: var(--accent); }
-.resp .s { color: var(--fg); }
-.resp .c { color: var(--muted); }
+/* API explorer */
+.term { background: var(--term-bg); color: var(--term-fg); border-radius: 10px; font-family: var(--font-mono); font-size: 13.5px; line-height: 1.7; overflow: hidden; min-width: 0; border: 1px solid var(--term-line); box-shadow: 8px 8px 0 var(--fg); }
+.term-bar { display: flex; align-items: center; gap: 8px; padding: 10px 14px; border-bottom: 1px solid var(--term-line); color: var(--term-muted); font-size: 12.5px; }
+.dots { display: flex; gap: 6px; }
+.dots i { width: 10px; height: 10px; border-radius: 50%; background: var(--term-line); display: block; }
+.dots i:first-child { background: var(--accent); }
+.tabs { display: flex; flex-wrap: wrap; gap: 2px 4px; padding: 10px 10px 0; border-bottom: 1px solid var(--term-line); }
+.tab { font: inherit; font-size: 12.5px; color: var(--term-muted); background: transparent; border: 0; border-bottom: 2px solid transparent; padding: 6px 10px; cursor: pointer; }
+.tab:hover { color: var(--term-fg); }
+.tab[aria-selected="true"] { color: var(--term-fg); border-bottom-color: var(--accent); }
+.reqline { display: flex; flex-wrap: wrap; gap: 4px 10px; align-items: baseline; padding: 12px 16px 0; }
+.reqline .method { color: var(--term-num); font-weight: 700; }
+.reqline .path { overflow-wrap: anywhere; }
+.reqline .status { margin-left: auto; color: var(--term-str); font-weight: 500; }
+.panel { margin: 0; padding: 8px 16px 18px; overflow-x: auto; font: inherit; min-height: 15.5em; }
+.panel[hidden] { display: none; }
+.panel .k { color: var(--term-key); }
+.panel .s { color: var(--term-str); }
+.panel .n { color: var(--term-num); }
+.panel .c { color: var(--term-muted); }
 
 /* sections */
-section { display: grid; grid-template-columns: 180px minmax(0, 1fr); gap: 16px 40px; padding-block: 48px; border-top: 1px solid var(--line); }
-.label { font-family: var(--font-mono); font-size: 13px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); padding-top: 6px; }
+section { display: grid; grid-template-columns: 190px minmax(0, 1fr); gap: 16px 40px; padding-block: 52px; border-top: 2px solid var(--fg); }
+.label { font-family: var(--font-mono); font-size: 13px; padding-top: 8px; color: var(--muted); }
+.label .m { display: inline-block; font-weight: 700; font-size: 11.5px; padding: 1px 7px; border-radius: 4px; background: var(--fg); color: var(--bg); margin-right: 6px; letter-spacing: 0.04em; }
+.label .p { color: var(--fg); font-weight: 500; }
 .content { min-width: 0; }
-.section-title { font-size: clamp(26px, 3.4vw, 34px); font-weight: 700; margin-bottom: 8px; }
+.section-title { font-size: clamp(28px, 3.8vw, 40px); font-weight: 800; margin-bottom: 8px; }
 .sub { color: var(--muted); margin-bottom: 28px; max-width: 40em; }
 
-/* timeline */
-.timeline { border-left: 2px solid var(--line); margin-left: 4px; }
-.timeline li { position: relative; padding: 0 0 22px 24px; display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 4px 16px; }
-.timeline li:last-child { padding-bottom: 0; }
-.timeline li::before { content: ""; position: absolute; left: -7px; top: 9px; width: 12px; height: 12px; border-radius: 50%; background: var(--bg); border: 2px solid var(--accent); }
-.timeline .when { font-family: var(--font-mono); font-size: 13px; color: var(--accent); padding-top: 3px; font-weight: 500; }
-.timeline .what { min-width: 0; }
-.timeline li.now::before { background: var(--accent); }
+/* journey, written like a git log */
+.log { border-left: 2px solid var(--fg); margin-left: 5px; }
+.log li { position: relative; padding: 0 0 20px 26px; display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 4px 16px; }
+.log li:last-child { padding-bottom: 0; }
+.log li::before { content: ""; position: absolute; left: -8px; top: 8px; width: 14px; height: 14px; background: var(--bg); border: 2px solid var(--fg); border-radius: 50%; }
+.log li.now::before { background: var(--accent); }
+.log .when { font-family: var(--font-mono); font-size: 13px; color: var(--muted); padding-top: 3px; }
+.log .what { min-width: 0; }
+.type { display: inline-block; font-family: var(--font-mono); font-size: 12px; font-weight: 700; padding: 0 8px; border-radius: 4px; background: var(--accent-soft); color: var(--accent-ink); margin-right: 8px; }
 
-/* experience */
-.role { display: flex; flex-wrap: wrap; gap: 4px 16px; justify-content: space-between; align-items: baseline; margin-bottom: 4px; }
-.role h3 { font-size: 22px; }
-.role .dates { font-family: var(--font-mono); font-size: 13px; color: var(--muted); }
-.client { color: var(--muted); margin-bottom: 24px; }
-.stack { display: grid; gap: 16px; }
-.xp { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 22px 24px; min-width: 0; }
-.xp h4 { font-family: var(--font-display); font-size: 18px; margin: 0 0 4px; }
-.xp .tags { margin-bottom: 14px; }
+/* request path strip */
+.flow { display: flex; align-items: stretch; margin: 4px 0 30px; }
+.node { flex: 1 1 0; min-width: 0; background: var(--surface); border: 2px solid var(--fg); border-radius: 8px; padding: 10px 12px; display: flex; flex-direction: column; justify-content: center; }
+.node b { font-family: var(--font-display); font-size: 16px; font-weight: 800; line-height: 1.15; }
+.node span { font-family: var(--font-mono); font-size: 11.5px; color: var(--muted); line-height: 1.35; margin-top: 2px; }
+.link { position: relative; flex: 0 0 34px; align-self: center; height: 2px; background: var(--fg); }
+.link::after { content: ""; position: absolute; top: -4px; left: 0; width: 10px; height: 10px; border-radius: 50%; background: var(--accent); animation: travel 2.6s linear infinite; animation-delay: var(--d, 0s); }
+@keyframes travel { 0% { left: -2px; opacity: 0; } 15% { opacity: 1; } 85% { opacity: 1; } 100% { left: calc(100% - 8px); opacity: 0; } }
+@keyframes travel-v { 0% { top: -2px; opacity: 0; } 15% { opacity: 1; } 85% { opacity: 1; } 100% { top: calc(100% - 8px); opacity: 0; } }
+.flowcap { font-family: var(--font-mono); font-size: 12.5px; color: var(--muted); margin: -18px 0 30px; max-width: 52em; }
+
+/* windows */
+.win { background: var(--surface); border: 2px solid var(--fg); border-radius: 10px; overflow: hidden; min-width: 0; transition: transform .14s, box-shadow .14s; box-shadow: 4px 4px 0 var(--fg); }
+.win:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--accent); }
+.win-bar { display: flex; align-items: center; gap: 10px; padding: 8px 14px; border-bottom: 2px solid var(--fg); font-family: var(--font-mono); font-size: 12.5px; color: var(--muted); background: var(--bg); }
+.win-bar .dots i { background: var(--dot); border: 1px solid var(--fg); }
+.win-bar .dots i:first-child { background: var(--accent); }
+.win-bar .right { margin-left: auto; text-align: right; }
+.win-body { padding: 20px 22px 22px; display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.stack { display: grid; gap: 22px; }
+.win h4 { font-size: 20px; font-weight: 800; }
 .bullets { display: grid; gap: 10px; }
 .bullets li { position: relative; padding-left: 18px; }
-.bullets li::before { content: ""; position: absolute; left: 0; top: 0.72em; width: 8px; height: 2px; background: var(--accent); }
-.intern { margin-top: 28px; padding-top: 24px; border-top: 1px dashed var(--line); }
-.intern h3 { font-size: 20px; margin-bottom: 2px; }
-.intern .dates { font-family: var(--font-mono); font-size: 13px; color: var(--muted); margin-bottom: 12px; }
+.bullets li::before { content: ">"; position: absolute; left: 0; top: 0; font-family: var(--font-mono); font-weight: 700; color: var(--accent-ink); }
+.role { display: flex; flex-wrap: wrap; gap: 4px 16px; justify-content: space-between; align-items: baseline; margin-bottom: 4px; }
+.role .dates { font-family: var(--font-mono); font-size: 13px; color: var(--muted); }
+.client { color: var(--muted); margin-bottom: 20px; }
+.intern { margin-top: 22px; }
+.intern .dates { font-family: var(--font-mono); font-size: 12.5px; color: var(--muted); }
 
 .tags { display: flex; flex-wrap: wrap; gap: 6px; }
-.tag { font-family: var(--font-mono); font-size: 12px; padding: 2px 9px; border-radius: 4px; background: var(--accent-soft); color: var(--accent); font-weight: 500; }
+.tag { font-family: var(--font-mono); font-size: 12px; padding: 2px 9px; border-radius: 4px; background: var(--accent-soft); color: var(--accent-ink); font-weight: 500; }
 
 /* projects */
-.projects { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
-.proj { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 24px; display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.projects { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; }
 .proj.wide { grid-column: 1 / -1; }
 .proj .meta { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 12px; font-family: var(--font-mono); font-size: 12.5px; color: var(--muted); }
-.proj h3 { font-size: 24px; }
-.proj.wide h3 { font-size: 30px; }
+.proj h3 { font-size: 26px; font-weight: 800; }
+.proj.wide h3 { font-size: 34px; }
 .proj .tagline { font-size: 17px; }
-.proj .cols { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 32px; }
+.proj .cols { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px 32px; }
 .proj .cols h4 { font-family: var(--font-mono); font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin: 0 0 4px; font-weight: 500; }
 .proj .cols p { font-size: 15px; }
-.proj .more { margin-top: auto; font-size: 14.5px; font-weight: 500; }
-
-.shot { margin: 8px 0 0; min-width: 0; }
-.shot img { display: block; width: 100%; height: auto; border: 1px solid var(--line); border-radius: 8px; }
+.proj .more { margin-top: auto; font-size: 14.5px; font-weight: 600; }
+.shot { margin: 6px 0 0; min-width: 0; }
+.shot img { display: block; width: 100%; height: auto; border: 2px solid var(--fg); border-radius: 8px; }
 .shot figcaption { font-size: 13.5px; color: var(--muted); margin-top: 8px; max-width: 46em; }
 .shot figcaption b { color: var(--fg); font-weight: 600; }
+.morelink { margin-top: 24px; font-family: var(--font-mono); font-size: 14px; }
 
-/* skills */
-.skills { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 32px; }
-.skills h3 { font-family: var(--font-mono); font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); font-weight: 500; margin-bottom: 8px; }
-.skills p { font-size: 15.5px; }
+/* skills as a file */
+.file { background: var(--term-bg); color: var(--term-fg); border-radius: 10px; font-family: var(--font-mono); font-size: 13.5px; line-height: 1.7; padding: 16px 20px 20px; border: 1px solid var(--term-line); box-shadow: 6px 6px 0 var(--fg); min-width: 0; }
+.file .cmd { color: var(--term-muted); margin-bottom: 10px; }
+.file .cmd b { color: var(--term-num); font-weight: 500; }
+.file .row { display: grid; grid-template-columns: 170px minmax(0, 1fr); gap: 2px 14px; padding: 3px 0; }
+.file .row .k { color: var(--term-key); }
+.file .row .v { color: var(--term-fg); overflow-wrap: anywhere; }
+.file .row .v i { font-style: normal; color: var(--term-str); }
 
 /* recognition */
-.recog { display: grid; gap: 18px; }
+.recog { display: grid; gap: 16px; margin-top: 24px; }
 .recog li { display: grid; grid-template-columns: 70px minmax(0, 1fr); gap: 4px 16px; }
-.recog .yr { font-family: var(--font-mono); font-size: 13px; color: var(--accent); font-weight: 500; padding-top: 3px; }
+.recog .yr { font-family: var(--font-mono); font-size: 13px; color: var(--accent-ink); font-weight: 700; padding-top: 3px; }
 .recog b { font-weight: 600; }
-.edu { margin-top: 28px; padding-top: 24px; border-top: 1px dashed var(--line); }
+.edu { margin-top: 26px; padding-top: 22px; border-top: 2px dashed var(--line); }
 .edu b { font-weight: 600; }
 .edu .muted { color: var(--muted); }
 
 /* contact */
-.contact .big { font-family: var(--font-display); font-size: clamp(26px, 4vw, 40px); font-weight: 700; margin-bottom: 20px; max-width: 18em; }
+.contact .big { font-family: var(--font-display); font-size: clamp(32px, 5.4vw, 60px); font-weight: 800; line-height: 1.02; letter-spacing: -0.03em; margin-bottom: 24px; max-width: 14em; }
+.contact .big span { background: linear-gradient(transparent 60%, var(--accent) 60%); }
 .mailrow { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 20px; }
-.mailrow code { font-family: var(--font-mono); font-size: 15px; padding: 8px 12px; background: var(--surface); border: 1px solid var(--line); border-radius: 6px; user-select: all; overflow-wrap: anywhere; }
-.mailrow button { font: inherit; font-size: 14px; padding: 8px 14px; border: 1.5px solid var(--fg); border-radius: 6px; background: transparent; color: var(--fg); cursor: pointer; font-weight: 500; }
-.mailrow button:hover { background: var(--fg); color: var(--bg); }
-.links { display: flex; flex-wrap: wrap; gap: 8px 24px; font-weight: 500; }
+.mailrow code { font-family: var(--font-mono); font-size: 15px; padding: 9px 12px; background: var(--surface); border: 2px solid var(--fg); border-radius: 6px; user-select: all; overflow-wrap: anywhere; }
+.mailrow button { font: inherit; font-size: 14px; font-weight: 600; padding: 9px 14px; border: 2px solid var(--fg); border-radius: 6px; background: var(--accent); color: #0B1220; cursor: pointer; box-shadow: 3px 3px 0 var(--fg); transition: transform .12s, box-shadow .12s; }
+.mailrow button:hover { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--fg); }
+.links { display: flex; flex-wrap: wrap; gap: 8px 24px; font-weight: 600; }
 
-footer { border-top: 2px solid var(--fg); padding-top: 16px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 16px; font-family: var(--font-mono); font-size: 12.5px; color: var(--muted); }
+footer { border-top: 2px solid var(--fg); padding-top: 14px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 16px; font-family: var(--font-mono); font-size: 12.5px; color: var(--muted); }
 
-@media (max-width: 860px) {
-  .hero { grid-template-columns: minmax(0, 1fr); gap: 32px; padding-block: 40px 48px; }
-  section { grid-template-columns: minmax(0, 1fr); gap: 8px; padding-block: 36px; }
+@media (max-width: 900px) {
+  .hero { grid-template-columns: minmax(0, 1fr); gap: 36px; padding-block: 40px 44px; }
+  section { grid-template-columns: minmax(0, 1fr); gap: 8px; padding-block: 38px; }
   .label { padding-top: 0; }
 }
-@media (max-width: 640px) {
-  .projects, .skills, .proj .cols { grid-template-columns: minmax(0, 1fr); }
-  .timeline li { grid-template-columns: minmax(0, 1fr); }
-  .recog li { grid-template-columns: minmax(0, 1fr); }
-  .xp, .proj { padding: 18px; }
-  .hero .lead { font-size: 17px; }
+@media (max-width: 700px) {
+  .flow { flex-direction: column; align-items: stretch; }
+  .link { flex: 0 0 24px; width: 2px; height: 24px; align-self: center; }
+  .link::after { top: -2px; left: -4px; animation-name: travel-v; }
+  .node { text-align: left; }
 }
-@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; transition: none !important; } }
+@media (max-width: 640px) {
+  .projects, .proj .cols { grid-template-columns: minmax(0, 1fr); }
+  .log li, .recog li { grid-template-columns: minmax(0, 1fr); }
+  .file .row { grid-template-columns: minmax(0, 1fr); }
+  .win-body { padding: 16px; }
+  .lead { font-size: 17px; }
+  .term, .file { box-shadow: 4px 4px 0 var(--fg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .hero h1 .cur, .link::after { animation: none; }
+  .link::after { opacity: 1; left: calc(50% - 5px); }
+  .win, .btn, .mailrow button { transition: none; }
+}
 </style>
 <style>:root{color-scheme:light}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 </head>
@@ -185,20 +253,20 @@ footer { border-top: 2px solid var(--fg); padding-top: 16px; display: flex; flex
 <div class="wrap">
 
   <header class="bar">
-    <span class="mark">akhila.nidumolu</span>
+    <span class="mark">akhila<i>.</i>nidumolu</span>
     <nav aria-label="Sections">
-      <a href="#journey">Journey</a>
-      <a href="#experience">Experience</a>
-      <a href="#projects">Projects</a>
-      <a href="#skills">Skills</a>
-      <a href="#contact">Contact</a>
+      <a href="#journey">/journey</a>
+      <a href="#experience">/experience</a>
+      <a href="#projects">/projects</a>
+      <a href="#skills">/skills</a>
+      <a href="#contact">/contact</a>
     </nav>
   </header>
 
   <div class="hero">
     <div>
-      <p class="eyebrow">Software Engineer · Hyderabad, India</p>
-      <h1>Akhila Nidumolu</h1>
+      <p class="eyebrow"><b>Software Engineer</b> · Hyderabad, India</p>
+      <h1>Akhila<br>Nidumolu<span class="cur" aria-hidden="true"></span></h1>
       <p class="lead">I build, test, ship and support <b>Java and Spring Boot services</b>. Since June 2025 I have worked at Cognizant on a large bank's card-servicing platform, from REST APIs to AWS pipelines and production support.</p>
       <div class="cta">
         <a class="btn primary" href="Akhila_Nidumolu_Resume_Product.pdf" target="_blank" rel="noopener">View resume</a>
@@ -207,9 +275,17 @@ footer { border-top: 2px solid var(--fg); padding-top: 16px; display: flex; flex
       </div>
     </div>
 
-    <div class="resp" role="img" aria-label="An API-style response summarising Akhila: Software Engineer in Hyderabad, working with Java, Spring Boot, React and AWS, has built 35 plus REST APIs, open to backend and full-stack roles.">
-      <div class="req"><span>GET /akhila-nidumolu</span><span class="status">200 OK</span></div>
-<pre><span class="c">{</span>
+    <div class="term">
+      <div class="term-bar"><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span><span>api-explorer</span></div>
+      <div class="tabs" role="tablist" aria-label="Choose an endpoint">
+        <button class="tab" role="tab" id="t-profile" aria-selected="true" aria-controls="p-profile" data-path="/akhila-nidumolu">/profile</button>
+        <button class="tab" role="tab" id="t-experience" aria-selected="false" aria-controls="p-experience" data-path="/akhila-nidumolu/experience">/experience</button>
+        <button class="tab" role="tab" id="t-projects" aria-selected="false" aria-controls="p-projects" data-path="/akhila-nidumolu/projects">/projects</button>
+        <button class="tab" role="tab" id="t-stack" aria-selected="false" aria-controls="p-stack" data-path="/akhila-nidumolu/stack">/stack</button>
+        <button class="tab" role="tab" id="t-contact" aria-selected="false" aria-controls="p-contact" data-path="/akhila-nidumolu/contact">/contact</button>
+      </div>
+      <div class="reqline"><span class="method">GET</span><span class="path" id="path">/akhila-nidumolu</span><span class="status">200 OK</span></div>
+<pre class="panel" id="p-profile" role="tabpanel" aria-labelledby="t-profile"><span class="c">{</span>
   <span class="k">"role"</span>: <span class="s">"Software Engineer"</span>,
   <span class="k">"based_in"</span>: <span class="s">"Hyderabad, India"</span>,
   <span class="k">"stack"</span>: [<span class="s">"Java"</span>, <span class="s">"Spring Boot"</span>,
@@ -217,31 +293,62 @@ footer { border-top: 2px solid var(--fg); padding-top: 16px; display: flex; flex
   <span class="k">"built"</span>: <span class="s">"35+ REST APIs"</span>,
   <span class="k">"resolved"</span>: <span class="s">"10+ production issues"</span>,
   <span class="k">"published"</span>: <span class="s">"IEEE paper"</span>,
-  <span class="k">"open_to"</span>: [<span class="s">"backend"</span>, <span class="s">"full-stack"</span>]
+  <span class="k">"open_to"</span>: [<span class="s">"Software Engineer"</span>,
+              <span class="s">"backend"</span>, <span class="s">"full-stack"</span>]
+<span class="c">}</span></pre>
+<pre class="panel" id="p-experience" role="tabpanel" aria-labelledby="t-experience" hidden><span class="c">{</span>
+  <span class="k">"employer"</span>: <span class="s">"Cognizant"</span>,
+  <span class="k">"since"</span>: <span class="s">"June 2025"</span>,
+  <span class="k">"client"</span>: <span class="s">"a large bank's card-servicing platform"</span>,
+  <span class="k">"areas"</span>: [<span class="s">"payment plan APIs"</span>,
+            <span class="s">"data processing and cloud"</span>],
+  <span class="k">"environments"</span>: <span class="s">"DEV to Production"</span>,
+  <span class="k">"modernized"</span>: <span class="s">"C++/EJB to Java REST"</span>
+<span class="c">}</span></pre>
+<pre class="panel" id="p-projects" role="tabpanel" aria-labelledby="t-projects" hidden><span class="c">[</span>
+  <span class="s">"Karpin Chat"</span>,
+  <span class="s">"Fake Social Media Profile Detection"</span>,
+  <span class="s">"Secure Attendance System"</span>,
+  <span class="s">"Employee Management System"</span>,
+  <span class="s">"Pharmacy Management App"</span>,
+  <span class="s">"Travel Management App"</span>
+<span class="c">]</span></pre>
+<pre class="panel" id="p-stack" role="tabpanel" aria-labelledby="t-stack" hidden><span class="c">{</span>
+  <span class="k">"backend"</span>: [<span class="s">"Java"</span>, <span class="s">"Spring Boot"</span>, <span class="s">"Spring Batch"</span>],
+  <span class="k">"frontend"</span>: [<span class="s">"React"</span>],
+  <span class="k">"cloud"</span>: [<span class="s">"AWS"</span>, <span class="s">"Terraform"</span>],
+  <span class="k">"data"</span>: [<span class="s">"MySQL"</span>, <span class="s">"Aurora PostgreSQL"</span>],
+  <span class="k">"testing"</span>: [<span class="s">"JUnit"</span>, <span class="s">"Pact"</span>]
+<span class="c">}</span></pre>
+<pre class="panel" id="p-contact" role="tabpanel" aria-labelledby="t-contact" hidden><span class="c">{</span>
+  <span class="k">"email"</span>: <span class="s">"nidumoluakhila@gmail.com"</span>,
+  <span class="k">"github"</span>: <span class="s">"Akhila-Nidumolu"</span>,
+  <span class="k">"linkedin"</span>: <span class="s">"akhila-nidumolu"</span>,
+  <span class="k">"leetcode"</span>: <span class="s">"AkhilaNidumolu"</span>
 <span class="c">}</span></pre>
     </div>
   </div>
 
   <section id="journey">
-    <div class="label">Journey</div>
+    <div class="label"><span class="m">GET</span><span class="p">/journey</span></div>
     <div class="content">
       <h2 class="section-title">From college projects to production</h2>
       <p class="sub">Each project below came from a real problem. The work at Cognizant is where I learned to run software in production.</p>
-      <ul class="timeline">
-        <li><span class="when">2021</span><span class="what">Started a B.Tech (Honors) in Computer Science and Engineering at Prasad V Potluri Siddhartha Institute of Technology.</span></li>
-        <li><span class="when">2023</span><span class="what">Built a fake profile detector and a travel planner. Reached the finals of the Smart India Hackathon.</span></li>
-        <li><span class="when">2024</span><span class="what">Attended the ACM Summer School on Generative AI for Text at IIT Gandhinagar, where the Karpin Chat project began. Also built a pharmacy management app.</span></li>
-        <li><span class="when">2025 · final year</span><span class="what">Wrote and presented an IEEE paper on a secure attendance system, contributing the concept, the writing and the frontend.</span></li>
-        <li><span class="when">Jan to Apr 8, 2025</span><span class="what">Java Full Stack intern at Cognizant. Built an employee management system.</span></li>
-        <li><span class="when">May 15, 2025</span><span class="what">Graduated with a CGPA of 9.1.</span></li>
-        <li><span class="when">Jun 20, 2025</span><span class="what">Joined Cognizant full time as a Software Engineer.</span></li>
-        <li class="now"><span class="when">Aug 13, 2025</span><span class="what">After basic tech training, joined a banking client's card-servicing project, where I work today.</span></li>
+      <ul class="log">
+        <li><span class="when">2021</span><span class="what"><span class="type">begin</span>Started a B.Tech (Honors) in Computer Science and Engineering at Prasad V Potluri Siddhartha Institute of Technology.</span></li>
+        <li><span class="when">2023</span><span class="what"><span class="type">build</span>Built a fake profile detector and a travel planner. Reached the finals of the Smart India Hackathon.</span></li>
+        <li><span class="when">2024</span><span class="what"><span class="type">learn</span>Attended the ACM Summer School on Generative AI for Text at IIT Gandhinagar, where the Karpin Chat project began. Also built a pharmacy management app.</span></li>
+        <li><span class="when">2025 · final year</span><span class="what"><span class="type">publish</span>Wrote and presented an IEEE paper on a secure attendance system, contributing the concept, the writing and the frontend.</span></li>
+        <li><span class="when">Jan to Apr 8, 2025</span><span class="what"><span class="type">intern</span>Java Full Stack intern at Cognizant. Built an employee management system.</span></li>
+        <li><span class="when">May 15, 2025</span><span class="what"><span class="type">graduate</span>Graduated with a CGPA of 9.1.</span></li>
+        <li><span class="when">Jun 20, 2025</span><span class="what"><span class="type">join</span>Joined Cognizant full time as a Software Engineer.</span></li>
+        <li class="now"><span class="when">Aug 13, 2025</span><span class="what"><span class="type">ship</span>After basic tech training, joined a banking client's card-servicing project, where I work today.</span></li>
       </ul>
     </div>
   </section>
 
   <section id="experience">
-    <div class="label">Experience</div>
+    <div class="label"><span class="m">GET</span><span class="p">/experience</span></div>
     <div class="content">
       <div class="role">
         <h2 class="section-title">Software Engineer, Cognizant</h2>
@@ -249,150 +356,182 @@ footer { border-top: 2px solid var(--fg); padding-top: 16px; display: flex; flex
       </div>
       <p class="client">Client: a leading global bank's card-servicing platform. Two areas of work:</p>
 
+      <div class="flow" role="img" aria-label="The path much of my work sits on: a client request goes through an API gateway to a service, then to a queue, a batch job and a database.">
+        <div class="node"><b>Client</b><span>request in</span></div><i class="link" style="--d:0s"></i>
+        <div class="node"><b>API gateway</b><span>auth, rate rules</span></div><i class="link" style="--d:.4s"></i>
+        <div class="node"><b>Service</b><span>Spring Boot</span></div><i class="link" style="--d:.8s"></i>
+        <div class="node"><b>Queue</b><span>SQS</span></div><i class="link" style="--d:1.2s"></i>
+        <div class="node"><b>Batch job</b><span>Spring Batch</span></div><i class="link" style="--d:1.6s"></i>
+        <div class="node"><b>Database</b><span>Aurora PostgreSQL</span></div>
+      </div>
+      <p class="flowcap">The path much of my work sits on: a request comes in, a service handles it, and slower work moves to queues and batch jobs.</p>
+
       <div class="stack">
-        <article class="xp">
-          <h4>Payment plan APIs and customer experience</h4>
-          <div class="tags"><span class="tag">Java</span><span class="tag">Spring Boot</span><span class="tag">REST APIs</span><span class="tag">React</span><span class="tag">TypeScript</span><span class="tag">Pact</span></div>
-          <ul class="bullets">
-            <li>Developed and integrated 35+ Java/Spring Boot REST APIs for payment plans, offers, enrollment and account servicing, across controller, service and data-access layers with databases and downstream services.</li>
-            <li>Configured and validated API gateway routes (authentication, rate and policy rules, request transformation) for end-to-end connectivity from the gateway to the payment-plan services.</li>
-            <li>Modernized a collections re-enrollment workflow by replacing legacy C++/EJB calls with Java REST services (an agency lookup read API and a re-enrollment write API) used by a React/TypeScript UI.</li>
-            <li>Wrote unit, component and contract tests with JUnit, Mockito, Cucumber, Pact and WireMock covering valid, invalid and edge cases, including the retry-selection logic of an asynchronous store-and-forward enrollment service.</li>
-            <li>Built React features for customer payment journeys and fixed an accessibility defect on a customer-facing offers page.</li>
-          </ul>
+        <article class="win">
+          <div class="win-bar"><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span><span>~/cognizant/payment-plan-apis</span></div>
+          <div class="win-body">
+            <h4>Payment plan APIs and customer experience</h4>
+            <div class="tags"><span class="tag">Java</span><span class="tag">Spring Boot</span><span class="tag">REST APIs</span><span class="tag">React</span><span class="tag">TypeScript</span><span class="tag">Pact</span></div>
+            <ul class="bullets">
+              <li>Developed and integrated 35+ Java/Spring Boot REST APIs for payment plans, offers, enrollment and account servicing, across controller, service and data-access layers with databases and downstream services.</li>
+              <li>Configured and validated API gateway routes (authentication, rate and policy rules, request transformation) for end-to-end connectivity from the gateway to the payment-plan services.</li>
+              <li>Modernized a collections re-enrollment workflow by replacing legacy C++/EJB calls with Java REST services (an agency lookup read API and a re-enrollment write API) used by a React/TypeScript UI.</li>
+              <li>Wrote unit, component and contract tests with JUnit, Mockito, Cucumber, Pact and WireMock covering valid, invalid and edge cases, including the retry-selection logic of an asynchronous store-and-forward enrollment service.</li>
+              <li>Built React features for customer payment journeys and fixed an accessibility defect on a customer-facing offers page.</li>
+            </ul>
+          </div>
         </article>
 
-        <article class="xp">
-          <h4>Data processing and cloud platform engineering</h4>
-          <div class="tags"><span class="tag">Spring Batch</span><span class="tag">AWS</span><span class="tag">Terraform</span><span class="tag">ECS</span><span class="tag">SQS</span><span class="tag">Glue</span><span class="tag">Lambda</span></div>
-          <ul class="bullets">
-            <li>Built Spring Batch jobs that run daily, configured per environment (DEV, UAT, PROD, QA, PERF, CERT) through deployment scripts.</li>
-            <li>Worked on an event-driven AWS data pipeline (S3 notification, Lambda, Glue, a Spring Batch pre-processor on Aurora PostgreSQL, SQS partitions) and acceptance-tested the Lambda trigger with valid, edge and malformed events.</li>
-            <li>Migrated a customer-data processor to a NextGen ECS platform using separate DEV and UAT Terraform workspaces, with plan review, health checks and IAM and secret validation, keeping the legacy deployment until cutover.</li>
-            <li>Supported application onboarding and deployment across DEV, CERT, QA, UAT, PERF and Production, including environment configuration, health validation and rollback readiness.</li>
-            <li>Investigated and resolved 10+ production and environment issues involving SQS, ECS and infrastructure changes, using CloudWatch, Splunk, Dynatrace and Argus for root-cause analysis.</li>
-            <li>Delivered security and platform upgrades, including a sidecar CVE fix, framework and infrastructure upgrades, ARM64/Graviton validation and a Splunk server migration to AWS.</li>
-          </ul>
+        <article class="win">
+          <div class="win-bar"><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span><span>~/cognizant/data-and-cloud</span></div>
+          <div class="win-body">
+            <h4>Data processing and cloud platform engineering</h4>
+            <div class="tags"><span class="tag">Spring Batch</span><span class="tag">AWS</span><span class="tag">Terraform</span><span class="tag">ECS</span><span class="tag">SQS</span><span class="tag">Glue</span><span class="tag">Lambda</span></div>
+            <ul class="bullets">
+              <li>Built Spring Batch jobs that run daily, configured per environment (DEV, UAT, PROD, QA, PERF, CERT) through deployment scripts.</li>
+              <li>Worked on an event-driven AWS data pipeline (S3 notification, Lambda, Glue, a Spring Batch pre-processor on Aurora PostgreSQL, SQS partitions) and acceptance-tested the Lambda trigger with valid, edge and malformed events.</li>
+              <li>Migrated a customer-data processor to a NextGen ECS platform using separate DEV and UAT Terraform workspaces, with plan review, health checks and IAM and secret validation, keeping the legacy deployment until cutover.</li>
+              <li>Supported application onboarding and deployment across DEV, CERT, QA, UAT, PERF and Production, including environment configuration, health validation and rollback readiness.</li>
+              <li>Investigated and resolved 10+ production and environment issues involving SQS, ECS and infrastructure changes, using CloudWatch, Splunk, Dynatrace and Argus for root-cause analysis.</li>
+              <li>Delivered security and platform upgrades, including a sidecar CVE fix, framework and infrastructure upgrades, ARM64/Graviton validation and a Splunk server migration to AWS.</li>
+            </ul>
+          </div>
         </article>
       </div>
 
-      <div class="intern">
-        <h3>Java Full Stack Development Intern, Cognizant</h3>
-        <p class="dates">Jan to Apr 8, 2025</p>
-        <ul class="bullets">
-          <li>Built Spring Boot REST APIs with Hibernate/JPA and MySQL, plus React components integrated with them.</li>
-          <li>Worked on authentication, database operations, API integration, debugging and application validation. The employee management system below came out of this internship.</li>
-        </ul>
-      </div>
+      <article class="win intern">
+        <div class="win-bar"><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span><span>~/cognizant/internship</span></div>
+        <div class="win-body">
+          <h4>Java Full Stack Development Intern, Cognizant</h4>
+          <p class="dates">Jan to Apr 8, 2025</p>
+          <ul class="bullets">
+            <li>Built Spring Boot REST APIs with Hibernate/JPA and MySQL, plus React components integrated with them.</li>
+            <li>Worked on authentication, database operations, API integration, debugging and application validation. The employee management system below came out of this internship.</li>
+          </ul>
+        </div>
+      </article>
     </div>
   </section>
 
   <section id="projects">
-    <div class="label">Projects</div>
+    <div class="label"><span class="m">GET</span><span class="p">/projects</span></div>
     <div class="content">
       <h2 class="section-title">Things I built myself</h2>
       <p class="sub">Six projects across college and my first year of work. The first two were the ones I learned the most from.</p>
 
       <div class="projects">
 
-        <article class="proj wide">
-          <div class="meta"><span>2024 · rebuilt after graduation</span><span>Hackathon origin</span></div>
-          <h3>Karpin Chat</h3>
-          <p class="tagline">A chatbot that reads a large CSV file and answers questions about it in plain English.</p>
-          <div class="cols">
-            <div><h4>How it works</h4><p>You enter the path to a CSV file, the app loads and analyzes it, and you ask questions. A simple question gets a direct answer. A larger result comes back as a CSV file.</p></div>
-            <div><h4>Under the hood</h4><p>An LLM (Llama 3 through Groq) turns each question into SQL. The backend validates the query and runs it read-only, so generated SQL cannot change the data. Built for large datasets, with CSVs of millions of rows as the target.</p></div>
-            <div><h4>Where it came from</h4><p>It began as a hackathon project in the 20-day ACM Summer School on Generative AI for Text at IIT Gandhinagar (2024), when I knew little about LLMs. After graduating I rebuilt it properly with AI assistance.</p></div>
-            <div><h4>Stack</h4><div class="tags"><span class="tag">Java</span><span class="tag">Spring Boot</span><span class="tag">Spring JDBC</span><span class="tag">H2</span><span class="tag">React</span><span class="tag">Llama 3</span><span class="tag">Groq</span></div></div>
+        <article class="win proj wide">
+          <div class="win-bar"><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span><span>~/projects/karpin-chat</span><span class="right">2024 · rebuilt after graduation</span></div>
+          <div class="win-body">
+            <h3>Karpin Chat</h3>
+            <p class="tagline">A chatbot that reads a large CSV file and answers questions about it in plain English.</p>
+            <div class="cols">
+              <div><h4>How it works</h4><p>You enter the path to a CSV file, the app loads and analyzes it, and you ask questions. A simple question gets a direct answer. A larger result comes back as a CSV file.</p></div>
+              <div><h4>Under the hood</h4><p>An LLM (Llama 3 through Groq) turns each question into SQL. The backend validates the query and runs it read-only, so generated SQL cannot change the data. Built for large datasets, with CSVs of millions of rows as the target.</p></div>
+              <div><h4>Where it came from</h4><p>It began as a hackathon project in the 20-day ACM Summer School on Generative AI for Text at IIT Gandhinagar (2024), when I knew little about LLMs. After graduating I rebuilt it properly with AI assistance.</p></div>
+              <div><h4>Stack</h4><div class="tags"><span class="tag">Java</span><span class="tag">Spring Boot</span><span class="tag">Spring JDBC</span><span class="tag">H2</span><span class="tag">React</span><span class="tag">Llama 3</span><span class="tag">Groq</span></div></div>
+            </div>
+            <figure class="shot">
+              <img src="karpin-concept.jpg" width="1141" height="502" loading="lazy" alt="Karpin Chat interface: a start screen with a CSV file path field, and a chat window showing a question about top employees by sales with a results table and a Download CSV button.">
+            </figure>
           </div>
-          <figure class="shot">
-            <img src="karpin-concept.jpg" width="1141" height="502" loading="lazy" alt="Karpin Chat interface: a start screen with a CSV file path field, and a chat window showing a question about top employees by sales with a results table and a Download CSV button.">
-          </figure>
         </article>
 
-        <article class="proj wide">
-          <div class="meta"><span>2023</span><span>First project with real-world exposure</span></div>
-          <h3>Fake Social Media Profile Detection</h3>
-          <p class="tagline">Type in an Instagram ID and get a verdict on whether the account is genuine or fake, with a percentage.</p>
-          <div class="cols">
-            <div><h4>How it works</h4><p>The app collects public profile details: followers, following, bio, external URL, activity, join date and profile picture. The data goes through three trained models, KNN, SVM and Random Forest, which each return a decision and how likely the account is to be original or fake.</p></div>
-            <div><h4>Training</h4><p>I trained the models on a Kaggle dataset of about 2 million accounts, reformatted to my chosen features. The metrics are in the Google Colab notebook.</p></div>
-            <div><h4>Choices I made</h4><p>I researched both Twitter and Instagram. Twitter would have needed NLP skills I did not have yet, so I went with Instagram. The first version used Python, Flask and minimal CSS, and I later rebuilt it as a full-stack app with Java, React, REST APIs and a database.</p></div>
-            <div><h4>Stack</h4><div class="tags"><span class="tag">Python</span><span class="tag">Flask</span><span class="tag">KNN</span><span class="tag">SVM</span><span class="tag">Random Forest</span><span class="tag">Java</span><span class="tag">React</span></div></div>
+        <article class="win proj wide">
+          <div class="win-bar"><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span><span>~/projects/fake-profile-detection</span><span class="right">2023 · first project with real-world exposure</span></div>
+          <div class="win-body">
+            <h3>Fake Social Media Profile Detection</h3>
+            <p class="tagline">Type in an Instagram ID and get a verdict on whether the account is genuine or fake, with a percentage.</p>
+            <div class="cols">
+              <div><h4>How it works</h4><p>The app collects public profile details: followers, following, bio, external URL, activity, join date and profile picture. The data goes through three trained models, KNN, SVM and Random Forest, which each return a decision and how likely the account is to be original or fake.</p></div>
+              <div><h4>Training</h4><p>I trained the models on a Kaggle dataset of about 2 million accounts, reformatted to my chosen features. The metrics are in the Google Colab notebook.</p></div>
+              <div><h4>Choices I made</h4><p>I researched both Twitter and Instagram. Twitter would have needed NLP skills I did not have yet, so I went with Instagram. The first version used Python, Flask and minimal CSS, and I later rebuilt it as a full-stack app with Java, React, REST APIs and a database.</p></div>
+              <div><h4>Stack</h4><div class="tags"><span class="tag">Python</span><span class="tag">Flask</span><span class="tag">KNN</span><span class="tag">SVM</span><span class="tag">Random Forest</span><span class="tag">Java</span><span class="tag">React</span></div></div>
+            </div>
+            <figure class="shot">
+              <img src="fake-profile-concept.jpg" width="1104" height="664" loading="lazy" alt="Concept mockup of a fake profile detection dashboard: an Instagram username box, a verdict card with a confidence percentage, profile details, and a bar chart comparing KNN, SVM and Random Forest.">
+              <figcaption><b>Concept mockup.</b> This shows the idea of the interface and is not a screenshot of the app. The profile, scores and history are example values, not results from my models.</figcaption>
+            </figure>
           </div>
-          <figure class="shot">
-            <img src="fake-profile-concept.jpg" width="1104" height="664" loading="lazy" alt="Concept mockup of a fake profile detection dashboard: an Instagram username box, a verdict card with a confidence percentage, profile details, and a bar chart comparing KNN, SVM and Random Forest.">
-            <figcaption><b>Concept mockup.</b> This shows the idea of the interface and is not a screenshot of the app. The profile, scores and history are example values, not results from my models.</figcaption>
-          </figure>
         </article>
 
-        <article class="proj">
-          <div class="meta"><span>2025 · final-year project</span><span>IEEE paper</span></div>
-          <h3>Secure Attendance System</h3>
-          <p>An attendance system that combines machine learning and blockchain. I came up with the concept, wrote the paper and built the frontend, while teammates built the backend. I authored and presented it as an IEEE conference paper.</p>
-          <div class="tags"><span class="tag">Machine learning</span><span class="tag">Blockchain</span></div>
-          <figure class="shot">
-            <img src="attendance.jpg" width="1137" height="349" loading="lazy" alt="Secure Attendance System: a login screen with Employee and Manager logins, and an attendance dashboard showing today's clock-in time and attendance history.">
-          </figure>
-          <a class="more" href="https://www.researchgate.net/publication/391038538_Secure_Attendance_System_Leveraging_Machine_Learning_and_Blockchain" target="_blank" rel="noopener">Read the paper</a>
+        <article class="win proj">
+          <div class="win-bar"><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span><span>~/projects/secure-attendance</span><span class="right">2025 · IEEE paper</span></div>
+          <div class="win-body">
+            <h3>Secure Attendance System</h3>
+            <p>An attendance system that combines machine learning and blockchain. I came up with the concept, wrote the paper and built the frontend, while teammates built the backend. I authored and presented it as an IEEE conference paper.</p>
+            <div class="tags"><span class="tag">Machine learning</span><span class="tag">Blockchain</span></div>
+            <figure class="shot">
+              <img src="attendance.jpg" width="1137" height="349" loading="lazy" alt="Secure Attendance System: a login screen with Employee and Manager logins, and an attendance dashboard showing today's clock-in time and attendance history.">
+            </figure>
+            <a class="more" href="https://www.researchgate.net/publication/391038538_Secure_Attendance_System_Leveraging_Machine_Learning_and_Blockchain" target="_blank" rel="noopener">Read the paper</a>
+          </div>
         </article>
 
-        <article class="proj">
-          <div class="meta"><span>2025 · internship project</span><span>Cognizant</span></div>
-          <h3>Employee Management System</h3>
-          <p>A web app used by both managers and employees, with the login separating the two. Employees clock in, see their holidays and shift timings, and apply for leave. A rejected request can be followed up with a direct email to the manager. Clocking in more than an hour after the shift starts marks the employee absent. Managers clock in, review leave requests and set shift schedules. Each profile shows designation, leaves, performance and clock-in history.</p>
-          <div class="tags"><span class="tag">Java</span><span class="tag">Spring Boot</span><span class="tag">React</span><span class="tag">MySQL</span></div>
-          <figure class="shot">
-            <img src="employee.jpg" width="925" height="258" loading="lazy" alt="Employee Management System: a login screen with separate Employee and Manager logins, and a leave requests view with pending, approved and rejected tabs and Approve and Reject buttons.">
-          </figure>
+        <article class="win proj">
+          <div class="win-bar"><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span><span>~/projects/employee-management</span><span class="right">2025 · Cognizant internship</span></div>
+          <div class="win-body">
+            <h3>Employee Management System</h3>
+            <p>A web app used by both managers and employees, with the login separating the two. Employees clock in, see their holidays and shift timings, and apply for leave. A rejected request can be followed up with a direct email to the manager. Clocking in more than an hour after the shift starts marks the employee absent. Managers clock in, review leave requests and set shift schedules. Each profile shows designation, leaves, performance and clock-in history.</p>
+            <div class="tags"><span class="tag">Java</span><span class="tag">Spring Boot</span><span class="tag">React</span><span class="tag">MySQL</span></div>
+            <figure class="shot">
+              <img src="employee.jpg" width="925" height="258" loading="lazy" alt="Employee Management System: a login screen with separate Employee and Manager logins, and a leave requests view with pending, approved and rejected tabs and Approve and Reject buttons.">
+            </figure>
+          </div>
         </article>
 
-        <article class="proj">
-          <div class="meta"><span>2024</span><span>Web app</span></div>
-          <h3>Pharmacy Management App</h3>
-          <p>An app for pharmacy staff. After login, the home page is a set of blocks: upcoming medicines, medicines in stock, medicines that are used up and ready to reorder, and the most and least sold medicines. Doctor consultations booked through the pharmacy open into three views: upcoming, ongoing and completed.</p>
-          <figure class="shot">
-            <img src="pharmacy.jpg" width="1152" height="517" loading="lazy" alt="Pharmacy Management System: a dashboard with upcoming medicines, low stock, total sales and appointments, and a doctor consultation view with upcoming, ongoing and completed tabs.">
-          </figure>
+        <article class="win proj">
+          <div class="win-bar"><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span><span>~/projects/pharmacy-management</span><span class="right">2024 · web app</span></div>
+          <div class="win-body">
+            <h3>Pharmacy Management App</h3>
+            <p>An app for pharmacy staff. After login, the home page is a set of blocks: upcoming medicines, medicines in stock, medicines that are used up and ready to reorder, and the most and least sold medicines. Doctor consultations booked through the pharmacy open into three views: upcoming, ongoing and completed.</p>
+            <figure class="shot">
+              <img src="pharmacy.jpg" width="1152" height="517" loading="lazy" alt="Pharmacy Management System: a dashboard with upcoming medicines, low stock, total sales and appointments, and a doctor consultation view with upcoming, ongoing and completed tabs.">
+            </figure>
+          </div>
         </article>
 
-        <article class="proj">
-          <div class="meta"><span>2023</span><span>Web app</span></div>
-          <h3>Travel Management App</h3>
-          <p>A trip-planning web app in the spirit of travel booking sites. One page lists the most famous places to visit, another the best hotels, another the food worth trying, and a further page handles ticket booking and consultation.</p>
-          <figure class="shot">
-            <img src="travel.jpg" width="1129" height="619" loading="lazy" alt="Travel Management Application: a home page with destination search and top destinations, hotels and food sections, and a ticket booking form for flights, trains and buses.">
-          </figure>
+        <article class="win proj">
+          <div class="win-bar"><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span><span>~/projects/travel-management</span><span class="right">2023 · web app</span></div>
+          <div class="win-body">
+            <h3>Travel Management App</h3>
+            <p>A trip-planning web app in the spirit of travel booking sites. One page lists the most famous places to visit, another the best hotels, another the food worth trying, and a further page handles ticket booking and consultation.</p>
+            <figure class="shot">
+              <img src="travel.jpg" width="1129" height="619" loading="lazy" alt="Travel Management Application: a home page with destination search and top destinations, hotels and food sections, and a ticket booking form for flights, trains and buses.">
+            </figure>
+          </div>
         </article>
 
       </div>
-      <p style="margin-top:20px"><a href="https://github.com/Akhila-Nidumolu" target="_blank" rel="noopener">More on GitHub</a></p>
+      <p class="morelink"><a href="https://github.com/Akhila-Nidumolu" target="_blank" rel="noopener">More on GitHub</a></p>
     </div>
   </section>
 
   <section id="skills">
-    <div class="label">Skills</div>
+    <div class="label"><span class="m">GET</span><span class="p">/skills</span></div>
     <div class="content">
       <h2 class="section-title">What I work with</h2>
       <p class="sub">Daily tools at work, plus what I used on my own projects.</p>
-      <div class="skills">
-        <div><h3>Languages</h3><p>Java, Python, JavaScript, SQL, C++</p></div>
-        <div><h3>Backend</h3><p>Spring Boot, Spring MVC, Spring Batch, REST APIs, OpenAPI, JPA, Hibernate, JDBC, Microservices, Flask</p></div>
-        <div><h3>Frontend</h3><p>React.js, HTML5, CSS3</p></div>
-        <div><h3>Databases</h3><p>MySQL, Aurora PostgreSQL</p></div>
-        <div><h3>AWS and DevOps</h3><p>ECS, S3, Lambda, Glue, SQS, SSM, CloudWatch, Terraform, Jenkins, Spinnaker, CI/CD, blue-green deployments</p></div>
-        <div><h3>Testing</h3><p>JUnit, Mockito, Cucumber, Pact, WireMock, Swagger, Bruno</p></div>
-        <div><h3>Monitoring</h3><p>Splunk, Dynatrace, Argus, CloudWatch</p></div>
-        <div><h3>Machine learning</h3><p>KNN, SVM, Random Forest, working with LLMs through Groq</p></div>
+      <div class="file">
+        <div class="cmd"><b>$</b> cat skills.yaml</div>
+        <div class="row"><span class="k">languages:</span><span class="v">Java, Python, JavaScript, SQL, C++</span></div>
+        <div class="row"><span class="k">backend:</span><span class="v">Spring Boot, Spring MVC, Spring Batch, REST APIs, OpenAPI, JPA, Hibernate, JDBC, Microservices, Flask</span></div>
+        <div class="row"><span class="k">frontend:</span><span class="v">React.js, HTML5, CSS3</span></div>
+        <div class="row"><span class="k">databases:</span><span class="v">MySQL, Aurora PostgreSQL</span></div>
+        <div class="row"><span class="k">aws_and_devops:</span><span class="v">ECS, S3, Lambda, Glue, SQS, SSM, CloudWatch, Terraform, Jenkins, Spinnaker, CI/CD, blue-green deployments</span></div>
+        <div class="row"><span class="k">testing:</span><span class="v">JUnit, Mockito, Cucumber, Pact, WireMock, Swagger, Bruno</span></div>
+        <div class="row"><span class="k">monitoring:</span><span class="v">Splunk, Dynatrace, Argus, CloudWatch</span></div>
+        <div class="row"><span class="k">machine_learning:</span><span class="v">KNN, SVM, Random Forest, working with LLMs through Groq</span></div>
       </div>
     </div>
   </section>
 
   <section id="recognition">
-    <div class="label">Recognition</div>
+    <div class="label"><span class="m">GET</span><span class="p">/recognition</span></div>
     <div class="content">
       <h2 class="section-title">Achievements and education</h2>
-      <ul class="recog" style="margin-top:24px">
+      <ul class="recog">
         <li><span class="yr">2025</span><span><b>IEEE conference paper.</b> Authored and presented <a href="https://www.researchgate.net/publication/391038538_Secure_Attendance_System_Leveraging_Machine_Learning_and_Blockchain" target="_blank" rel="noopener">Secure Attendance System Leveraging Machine Learning and Blockchain</a>.</span></li>
         <li><span class="yr">2024</span><span><b>ACM Summer School.</b> Selected participant in Generative AI for Text, IIT Gandhinagar.</span></li>
         <li><span class="yr">2023</span><span><b>Smart India Hackathon finalist.</b></span></li>
@@ -405,9 +544,9 @@ footer { border-top: 2px solid var(--fg); padding-top: 16px; display: flex; flex
   </section>
 
   <section id="contact" class="contact">
-    <div class="label">Contact</div>
+    <div class="label"><span class="m">POST</span><span class="p">/contact</span></div>
     <div class="content">
-      <p class="big">Open to backend and full-stack roles.</p>
+      <p class="big">Open to <span>Software Engineer</span> roles, <span>backend</span> and <span>full-stack</span>.</p>
       <div class="mailrow">
         <code id="mail">nidumoluakhila@gmail.com</code>
         <button type="button" id="copy">Copy email</button>
@@ -429,6 +568,31 @@ footer { border-top: 2px solid var(--fg); padding-top: 16px; display: flex; flex
 
 <script>
 (function () {
+  /* API explorer tabs */
+  var tabs = Array.prototype.slice.call(document.querySelectorAll(".tab"));
+  var pathEl = document.getElementById("path");
+  function show(tab) {
+    tabs.forEach(function (t) {
+      var on = t === tab;
+      t.setAttribute("aria-selected", on ? "true" : "false");
+      t.tabIndex = on ? 0 : -1;
+      var p = document.getElementById(t.getAttribute("aria-controls"));
+      if (p) p.hidden = !on;
+    });
+    if (pathEl) pathEl.textContent = tab.getAttribute("data-path");
+  }
+  tabs.forEach(function (t, i) {
+    t.tabIndex = i === 0 ? 0 : -1;
+    t.addEventListener("click", function () { show(t); });
+    t.addEventListener("keydown", function (e) {
+      var j = -1;
+      if (e.key === "ArrowRight") j = (i + 1) % tabs.length;
+      if (e.key === "ArrowLeft") j = (i - 1 + tabs.length) % tabs.length;
+      if (j > -1) { e.preventDefault(); show(tabs[j]); tabs[j].focus(); }
+    });
+  });
+
+  /* copy email */
   var btn = document.getElementById("copy");
   var mail = document.getElementById("mail");
   if (!btn || !mail) return;
